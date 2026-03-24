@@ -23,8 +23,7 @@
 
 См. подробности в:
 
-- `README.md` (корень проекта)
-- `Gui/README.md`
+- `README.md` (корень проекта, разделы Requirements/Quick Start/GUI Commands)
 
 ## 3. Быстрый запуск программы
 
