@@ -1,27 +1,28 @@
-﻿# FrowCRRd
+# FrowCRRd
 
 Desktop rocket simulation suite with a C++20 physics core and an Electron GUI.
 
-## What This Project Includes
+## Overview
 
-- Native simulation core (`Core`, `Models`, `Configs`) in C++20
-- Bridge runner (`Bridge/frowcrrd_runner`) that accepts JSON config and returns telemetry JSON
-- Desktop GUI (`Gui/`) for assembly, tuning, simulation playback, charts, and event log
+FrowCRRd combines:
 
-Model scope: 2D point-mass simulation (not 6DOF).
+- Native simulation core in C++20 (`Core`, `Models`, `Configs`)
+- JSON bridge runner (`Bridge/frowcrrd_runner`)
+- Desktop GUI in Electron + React (`Gui`)
 
-## What To Download / Install
+Current model scope: 2D point-mass flight simulation (not 6DOF).
 
-### 1) Required
+## Requirements
 
-- **Git**
-- **Node.js LTS (20+)**
-- **CMake 3.20+**
-- **MSYS2 UCRT64 toolchain** on Windows (`C:\msys64\ucrt64`)
+### Required tools
 
-### 2) MSYS2 packages (Windows)
+- Git
+- Node.js LTS (20+)
+- npm
+- CMake 3.20+
+- MSYS2 UCRT64 toolchain on Windows (`C:\msys64\ucrt64`)
 
-Open MSYS2 UCRT64 shell and install:
+### Recommended MSYS2 packages (Windows)
 
 ```bash
 pacman -S --needed \
@@ -32,7 +33,7 @@ pacman -S --needed \
   mingw-w64-ucrt-x86_64-eigen3
 ```
 
-## Quick Start (Desktop App)
+## Quick Start (Desktop)
 
 From repository root:
 
@@ -42,16 +43,23 @@ npm install
 npm run dev:desktop:core
 ```
 
-This command builds the native runner and starts Electron + Vite.
-
-If PowerShell blocks `npm` script execution, use:
+If PowerShell blocks npm scripts:
 
 ```powershell
 npm.cmd install
 npm.cmd run dev:desktop:core
 ```
 
-## Build Native Runner Only
+## Core Build (CMake)
+
+From repository root:
+
+```powershell
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
+
+## Native Runner Build
 
 From repository root:
 
@@ -65,65 +73,103 @@ Expected output:
 build/gui-release/bin/frowcrrd_runner.exe
 ```
 
-## Run Desktop App With Existing Runner
+## GUI Commands
 
-If runner is already built:
+Run from `Gui/`.
+
+### Dev
 
 ```powershell
-cd Gui
+npm run dev:web
 npm run dev:desktop
+npm run dev:desktop:core
 ```
 
-## Build Desktop Installer
+### Build
 
-From `Gui/`:
+```powershell
+npm run build:web
+npm run build:sim-core
+npm run build:sim-core:debug
+npm run lint
+```
+
+### Packaging
 
 ```powershell
 npm run build:desktop
+npm run build:desktop:offline
+npm run pack:desktop
 ```
 
-Installer artifacts are written to `Gui/release/`.
+Artifacts are produced in `Gui/release/`.
 
-## Build Core (CMake)
+## How GUI Talks to Core
 
-From repository root:
+- Renderer sends config JSON via IPC `simulation:run`
+- Electron main process runs `frowcrrd_runner --input <temp-json>`
+- Runner returns telemetry JSON
+- GUI normalizes telemetry and renders charts, playback and event markers
+
+Implementation entrypoint: `Gui/electron/main.cjs`.
+
+## Runner Search Paths (Desktop)
+
+Electron checks, among others:
+
+- `../build/gui-release/bin/frowcrrd_runner.exe`
+- `../build/gui-debug/bin/frowcrrd_runner.exe`
+- packaged resource paths (`sim-core`)
+
+Override manually:
 
 ```powershell
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build build
+$env:FROWCRRD_RUNNER_PATH="C:\absolute\path\frowcrrd_runner.exe"
+npm run dev:desktop
 ```
 
-## Manual Runner Call (for Debug)
+## Frequent Problems
+
+### `runner_not_found`
+
+Build native runner first:
 
 ```powershell
-build\gui-release\bin\frowcrrd_runner.exe --input C:\path\to\config.json
+npm run build:sim-core
 ```
 
-The runner must be started with working directory where `Configs/config.json` is resolvable (normally repository root).
+### `Failed to load config: Configs/config.json`
+
+Run desktop flow from the project setup (`npm run dev:desktop:core` from `Gui`) so working directory resolution is correct.
+
+### `npm.ps1 cannot be loaded` (Execution Policy)
+
+Use `npm.cmd ...` commands in PowerShell.
 
 ## Current GUI Notes
 
-- Aerodynamic drag is always enabled
-- Parachutes support multiple canopies
-- All parachutes in one configuration must use the same trigger mode (`time`/`altitude`/`speed`)
-- Pitch program supports full 0..360 degree range
-- Event log includes launch, staging/fairing, apogee, impact, and engine burnout markers
+- Engine type switch is removed from UI
+- Drag is always enabled
+- SetupView contains final-stage parachute count/type quick setup
+- Detailed parachute config is in Builder hierarchy (`Parachutes`)
+- Event log and trajectory markers include engine burnout events
 
-## Repository Map
+## Repository Layout
 
 - `Bridge/` — native JSON bridge runner
-- `Configs/` — global simulation config + CSV paths
-- `Core/` — integrator + simulation loop
-- `Models/` — rocket, atmosphere, drag, engine, stage, parachute models
-- `Gui/` — Electron + React UI
-- `docs/` — user/developer documentation
-- `scripts/` — helper scripts (runner build, audits, cleanup)
+- `Configs/` — simulation config + CSV files
+- `Core/` — integrator and simulation loop
+- `Models/` — atmosphere, drag, engine, stage, rocket, parachute models
+- `Gui/` — Electron + React frontend
+- `docs/` — user and developer guides
+- `scripts/` — helper scripts
+- `Tests/` — test targets
 
 ## License
 
 This project is licensed under **FrowCRRd Public Source License 1.0.0 (FPSL-1.0.0)**.
 
-See:
+See also:
 
 - `LICENSE`
 - `NOTICE`
