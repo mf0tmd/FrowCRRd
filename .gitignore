@@ -1,0 +1,33 @@
+# Игнорировать все временные файлы
+build/
+build-*/
+**/build/
+*.pyd
+*.pyc
+*.pyi
+__pycache__/
+Gui/node_modules/
+Gui/dist/
+Gui/release/
+
+# Игнорировать настройки Visual Studio Code
+.vscode/
+
+# Игнорировать все системные файлы
+.DS_Store
+Thumbs.db
+
+# Игнорировать зависимости, если они подгружаются через git submodules
+external/*
+
+*.o
+*.a
+*.so
+*.exe
+*.out
+*.app
+*.user
+*.log
+.idea/
+CMakeCache.txt
+CMakeFiles/
