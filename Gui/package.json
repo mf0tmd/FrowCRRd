@@ -13,9 +13,11 @@
     "build": "vite build",
     "build:web": "vite build",
     "build:sim-core": "powershell -NoProfile -ExecutionPolicy Bypass -File ..\\scripts\\build_sim_runner.ps1 -BuildDir build\\gui-release -BuildType Release",
+    "build:sim-core:linux": "bash ../scripts/build_sim_runner.sh build/gui-release Release",
     "build:sim-core:debug": "powershell -NoProfile -ExecutionPolicy Bypass -File ..\\scripts\\build_sim_runner.ps1 -BuildDir build\\gui-debug -BuildType Debug",
     "build:desktop": "npm run build:web && npm run build:sim-core && electron-builder --win nsis-web",
     "build:desktop:offline": "npm run build:web && npm run build:sim-core && electron-builder --win nsis",
+    "build:desktop:linux": "npm run build:web && npm run build:sim-core:linux && electron-builder --linux AppImage",
     "pack:desktop": "npm run build:web && npm run build:sim-core && electron-builder --dir",
     "preview": "vite preview",
     "lint": "tsc --noEmit"
@@ -40,7 +42,7 @@
   "build": {
     "appId": "com.frowcrrd.desktop",
     "productName": "FrowCRRD",
-    "artifactName": "${productName}-Setup-${version}.${ext}",
+    "artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
     "afterPack": "electron/after-pack.cjs",
     "directories": {
       "output": "release",
@@ -79,6 +81,18 @@
           ]
         }
       ]
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "icon.png",
+      "category": "Science"
     },
     "nsis": {
       "installerIcon": "icon.ico",
