@@ -1,7 +1,7 @@
 {
   "name": "frowcrrd-aerospace-simulation-suite",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.6.0-beta",
   "description": "Desktop wrapper build for FrowCRRD Aerospace Simulation Suite",
   "type": "module",
   "main": "electron/main.cjs",
