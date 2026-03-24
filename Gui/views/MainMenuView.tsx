@@ -189,7 +189,7 @@ const MainMenuView: React.FC<MainMenuViewProps> = ({ onNavigate, onStartSetup, t
         {/* Center Logo/Title */}
         <div className="flex flex-col items-center text-center order-1 lg:order-2 mb-4 lg:mb-0 flex-1">
           <h1 className={`text-4xl md:text-6xl font-black tracking-tighter mb-4 italic ${isDark ? 'text-white' : 'text-blue-600'}`}>
-            FrowCRRD <span className={isDark ? 'text-blue-600' : 'text-gray-400'}>v0.6.0beta</span>
+            FrowCRRD <span className={isDark ? 'text-blue-600' : 'text-gray-400'}>v0.6.0-beta</span>
           </h1>
           <p className={`${isDark ? 'text-gray-500' : 'text-gray-400'} max-w-xs md:max-w-sm uppercase text-[10px] md:text-[11px] tracking-[0.3em] font-black px-4 leading-relaxed`}>
             {t('menu_desc')}
