@@ -21,9 +21,9 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "lucide-react": "^0.562.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "lucide-react": "^0.562.0",
     "recharts": "^3.6.0"
   },
   "devDependencies": {
@@ -32,6 +32,7 @@
     "concurrently": "^9.2.1",
     "electron": "^34.3.0",
     "electron-builder": "^25.1.8",
+    "rcedit": "^5.0.2",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "wait-on": "^8.0.1"
@@ -40,6 +41,7 @@
     "appId": "com.frowcrrd.desktop",
     "productName": "FrowCRRD",
     "artifactName": "${productName}-Setup-${version}.${ext}",
+    "afterPack": "electron/after-pack.cjs",
     "directories": {
       "output": "release",
       "buildResources": "build"
@@ -60,10 +62,14 @@
         "filter": [
           "frowcrrd_runner*"
         ]
+      },
+      {
+        "from": "build/icon.ico",
+        "to": "build/icon.ico"
       }
     ],
     "win": {
-      "icon": "build/icon.ico",
+      "icon": "icon.ico",
       "signAndEditExecutable": false,
       "target": [
         {
@@ -75,9 +81,9 @@
       ]
     },
     "nsis": {
-      "installerIcon": "build/icon.ico",
-      "uninstallerIcon": "build/icon.ico",
-      "installerHeaderIcon": "build/icon.ico",
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "installerHeaderIcon": "icon.ico",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
