@@ -1,33 +1,55 @@
-# Игнорировать все временные файлы
+# Build outputs
 build/
 build-*/
 **/build/
-*.pyd
-*.pyc
-*.pyi
-__pycache__/
-Gui/node_modules/
 Gui/dist/
+Gui/dist-ssr/
 Gui/release/
 
-# Игнорировать настройки Visual Studio Code
-.vscode/
+# Node / frontend
+Gui/node_modules/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Игнорировать все системные файлы
+# Python leftovers
+*.pyc
+*.pyd
+*.pyi
+__pycache__/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+
+# IDE / editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local env files
+*.local
+
+# OS files
 .DS_Store
 Thumbs.db
 
-# Игнорировать зависимости, если они подгружаются через git submodules
-external/*
-
+# Generic binaries and logs
 *.o
 *.a
 *.so
-*.exe
 *.out
 *.app
 *.user
 *.log
-.idea/
-CMakeCache.txt
-CMakeFiles/
+*.exe
+
+# External submodules or vendored deps
+external/*
