@@ -1,0 +1,204 @@
+# FrowCRRd Public Source License 1.0.0 (FPSL-1.0.0)
+
+## Acceptance
+
+In order to get any license under these terms, you must agree
+to them as both strict obligations and conditions to all
+your licenses.
+
+## Copyright License
+
+The licensor grants you a copyright license for the
+software to do everything you might do with the software
+that would otherwise infringe the licensor's copyright
+in it for any permitted purpose. However, you may
+only distribute the software according to [Distribution
+License](#distribution-license) and make changes or new works
+based on the software according to [Changes and New Works
+License](#changes-and-new-works-license).
+
+## Distribution License
+
+The licensor grants you an additional copyright license
+to distribute copies of the software.  Your license
+to distribute covers distributing the software with
+changes and new works permitted by [Changes and New Works
+License](#changes-and-new-works-license).
+If you distribute changes or new works, you must provide 
+complete corresponding source code
+of those changes or new works under these same terms.
+Closed-source distribution of modified versions is not permitted.
+
+## Modification Records
+
+If you distribute modified versions, you must clearly mark modified files and include date of modification.
+
+## Notices
+
+You must ensure that anyone who gets a copy of any part of
+the software from you also gets a copy of these terms or the
+URL for them above, as well as copies of any plain-text lines
+beginning with `Required Notice:` that the licensor provided
+with the software.  For example:
+
+> Required Notice: Copyright (c) 2026 FrowCRRd Authors.
+> Required Notice: Project URL: https://github.com/mf0tmd/FrowCRRd
+> Required Notice: See AUTHORS.md for the complete list of Copyright Holders.
+
+## Notice Integrity
+
+You may not remove, alter, or obscure any required notice provided in NOTICE.
+
+## Changes and New Works License
+
+The licensor grants you an additional copyright license to
+make changes and new works based on the software for any
+permitted purpose.
+
+## No Patent License
+
+No patent license is granted under these terms.
+
+## Noncommercial Purposes
+
+Any noncommercial purpose is a permitted purpose.
+Any Commercial Use is prohibited unless expressly authorized by a separate written agreement signed by the Copyright Holders.
+This prohibition applies to all persons and entities, including Natural Persons, Legal Entities, Government Entities, and Military Bodies.
+
+## Commercial Licensing Contact
+
+Commercial rights, if any, are available only by separate written agreement with the Copyright Holders.
+Contact: mf0tmd@gmail.com
+
+## Government Restriction
+
+No Government Entity is granted any right to use the software.
+
+## Military Restriction
+
+No person or entity may use the software for Military Use.
+
+## Personal Uses
+
+Personal use for research, experiment, and testing for
+the benefit of public knowledge, personal study, private
+entertainment, hobby projects, amateur pursuits, or religious
+observance, without any anticipated commercial application,
+is use for a permitted purpose.
+
+## Noncommercial Organizations
+
+Use by charitable organizations, educational institutions, public research organizations,
+public safety or health organizations, and environmental protection organizations
+is use for a permitted purpose, except if such organization is a Government Entity.
+
+## Fair Use
+
+You may have "fair use" rights for the software under the
+law. These terms do not limit them.
+
+## No Other Rights
+
+These terms do not allow you to sublicense or transfer any of
+your licenses to anyone else, or prevent the licensor from
+granting licenses to anyone else.  These terms do not imply
+any other licenses.
+
+## No Circumvention
+
+You may not circumvent these terms through affiliates, contractors, intermediaries, or technical structure.
+Any use that would be prohibited if done directly is also prohibited if done indirectly.
+
+## No Trademark Rights
+
+These terms grant no right to use names, logos, or trademarks of the licensors.
+
+## Automatic Termination
+
+Any violation of these terms immediately and automatically terminates all rights granted under this license.
+
+## No Waiver
+
+Failure or delay by any of the Copyright Holders to enforce any term does not waive that term or any other term.
+Any waiver must be in a separate written statement signed by the Copyright Holders.
+A waiver in one instance does not imply a waiver in any other instance.
+
+## No Liability
+
+***As far as the law allows, the software comes as is, without
+any warranty or condition, and the licensor will not be liable
+to you for any damages arising out of these terms or the use
+or nature of the software, under any kind of legal claim.***
+
+## Language Priority
+
+If this license is provided in more than one language, the English version controls in case of conflict.
+
+## Severability
+
+If any provision of these terms is held invalid, illegal, or unenforceable, that provision will be enforced to the maximum extent permitted by law, and the remaining provisions will remain in full force and effect.
+
+## Contributions
+
+Any Submitted Contribution to the project is accepted only under the contribution terms in CONTRIBUTING.md.
+By Submitting a Contribution, each Contributor agrees to the Contribution Licensing terms in CONTRIBUTING.md, which are incorporated by reference into these terms.
+If a conflict exists regarding Contributions, the Contribution Licensing section of CONTRIBUTING.md controls.
+
+## Definitions
+
+The **licensor** is the individual or entity offering these
+terms, and the **software** is the software the licensor makes
+available under these terms.
+
+**You** refers to the individual or entity agreeing to these
+terms.
+
+**Your company** is any legal entity, sole proprietorship,
+or other kind of organization that you work for, plus all
+organizations that have control over, are under the control of,
+or are under common control with that organization.  **Control**
+means ownership of substantially all the assets of an entity,
+or the power to direct its management and policies by vote,
+contract, or otherwise.  Control can be direct or indirect.
+
+**Your licenses** are all the licenses granted to you for the
+software under these terms.
+
+**Use** means anything you do with the software requiring one
+of your licenses.
+
+**Natural Person** means an individual human being.
+
+**Government Entity** means any government body, state agency, ministry, military body,
+law-enforcement body, municipal authority, or any person acting on their behalf.
+
+**Military Use** means any use connected to weapons, targeting, military operations,
+defense procurement, military simulation/training, or combat law-enforcement operations.
+
+**Commercial Use** means any use intended for or resulting in commercial advantage
+or monetary compensation.
+
+**Legal Entity** means any company, corporation, startup, partnership, association, foundation,
+institution, university, school, laboratory, NGO, government body, agency, or other juridical entity.
+
+**Copyright Holders** means the persons or entities identified in copyright notices for the software.
+
+**Required Notice** means any plain-text line beginning with `Required Notice:` provided by the licensor in NOTICE.
+
+**Marks** means names, logos, trademarks, service marks, trade names, or branding identifiers of the licensors.
+
+**Circumvention** means any direct or indirect attempt to avoid, bypass, or nullify restrictions in these terms.
+
+**Permitted Purpose** means any use explicitly allowed by these terms and not otherwise prohibited by these terms.
+
+**Complete Corresponding Source Code** means all source code, interface definition files, build scripts, and installation instructions necessary to generate, install, and run the modified software, excluding system libraries and generally available tools that are not part of the software.
+
+**Military Bodies** means any armed forces, defense ministry, military command, military unit, intelligence service, paramilitary force, or any contractor acting on their behalf.
+
+**Contributor** means any Natural Person or Legal Entity that submits a Contribution.
+
+**Contribution** means any source code, object code, documentation, data, configuration, tests, scripts, issue attachments, patches, or other material intentionally submitted for inclusion in the software or project repositories.
+
+**Submitted** means provided to the project by any channel used by the Copyright Holders, including pull requests, commits, patches, issue trackers, email, or other designated communication channels.
+
+**Moral Rights** means rights of attribution, integrity, disclosure, withdrawal, and similar non-economic author rights, to the extent recognized by applicable law.

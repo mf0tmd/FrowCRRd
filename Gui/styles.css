@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-color: #0a0a0a;
+  --surface-color: #0d0d0d;
+  --surface-accent: #111111;
+  --border-color: #333333;
+  --border-strong: #444444;
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --accent-color: #3b82f6;
+}
+
+body.light {
+  --bg-color: #f3f4f6;
+  --surface-color: #ffffff;
+  --surface-accent: #f9fafb;
+  --border-color: #e5e7eb;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --accent-color: #2563eb;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  margin: 0;
+  overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: fixed;
+}
+
+#root {
+  overflow: hidden;
+}
+
+.mono {
+  font-family: Consolas, 'Courier New', monospace;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--border-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
+
+button,
+span,
+label {
+  user-select: none;
+}

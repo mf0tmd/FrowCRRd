@@ -1,0 +1,55 @@
+# Build outputs
+build/
+build-*/
+**/build/
+Gui/dist/
+Gui/dist-ssr/
+Gui/release/
+
+# Node / frontend
+Gui/node_modules/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Python leftovers
+*.pyc
+*.pyd
+*.pyi
+__pycache__/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+
+# IDE / editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local env files
+*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generic binaries and logs
+*.o
+*.a
+*.so
+*.out
+*.app
+*.user
+*.log
+*.exe
+
+# External submodules or vendored deps
+external/*

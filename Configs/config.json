@@ -1,0 +1,26 @@
+{
+    "simulation":
+    {
+        "time_step": 0.001
+    },
+    "atmosphere":
+    {
+        "active_profile": "earth_us_standard_6p",
+        "profiles":
+        {
+            "earth_us_standard_6p":
+            {
+                "data_path": "Configs/CSV_files/earth_us_standard_6p.csv",
+                "planet_radius": 6371000.0,
+                "surface_gravity": 9.80665
+            }
+        }
+    },
+    "files":
+    {
+        "fair_drag_table": "Configs/CSV_files/fair_drag_table.csv",
+        "bottom_drag_table": "Configs/CSV_files/bottom_drag_table.csv",
+        "main_parachute_drag_table": "Configs/CSV_files/main_parachute_drag_table.csv",
+        "drogue_parachute_drag_table": "Configs/CSV_files/drogue_parachute_drag_table.csv"
+    }
+}
