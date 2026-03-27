@@ -1,188 +1,127 @@
 ﻿# FrowCRRd Developer Guide
 
-This document describes the current Windows desktop build pipeline and runtime contract for core, bridge, and GUI.
+This document is for developers working with source code.
 
 ## 1. Architecture
 
-Project layers:
+Main layers:
 
-- `Configs/` - simulation configuration and CSV data sources
-- `Models/` - atmosphere, drag, engine, tank, stage, rocket, parachute
-- `Core/` - physics (`Physics`) and integration loop (`Simulation`)
-- `Bridge/` - `frowcrrd_runner` JSON adapter between GUI and core
-- `Gui/` - Electron + React + TypeScript desktop shell
+- `Configs/` - global simulation config and CSV data tables
+- `Models/` - atmosphere, drag, engine, tank, stage, rocket, parachute models
+- `Core/` - physics and integration loop
+- `Bridge/` - `frowcrrd_runner` JSON bridge (`--input <file> -> telemetry JSON`)
+- `Gui/` - Electron + React desktop frontend
 
-## 2. Build Matrix (Windows)
+## 2. Platform Scope
 
-## 2.1 Core + Runner via CMake
+- This branch is Windows-only for distribution.
+- CMake is guarded to fail on non-Windows platforms.
 
-```powershell
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build build
-```
+## 3. Build Prerequisites (Windows)
 
-## 2.2 Runner Helper Script
+- Node.js 20+
+- npm
+- CMake 3.20+
+- Ninja
+- MSYS2 UCRT64 toolchain (`C:\msys64\ucrt64`)
+
+## 4. Source Build Flow
+
+### 4.1 Native Runner
+
+From repo root:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_sim_runner.ps1 -BuildDir build\gui-release -BuildType Release
 ```
 
-Notes:
+Output:
 
-- builds `frowcrrd_runner.exe`;
-- inspects binary dependencies via `objdump`;
-- copies required MSYS2 runtime DLLs next to the runner executable.
+- `build\gui-release\bin\frowcrrd_runner.exe`
+- copied runtime DLLs next to runner (portable packaging support)
 
-## 2.3 Desktop App Workflow
-
-From `Gui/`:
-
-```powershell
-npm install
-npm run dev:desktop:core
-```
-
-## 2.4 Standalone Installer
+### 4.2 Desktop Dev
 
 From `Gui/`:
 
 ```powershell
-npm run build:desktop:standalone
+npm.cmd install
+npm.cmd run dev:desktop:core
 ```
 
-Produces an offline NSIS installer in `Gui\release\`.
+### 4.3 Local Installer Build
 
-## 3. Runtime Contract: GUI -> Runner
+From `Gui/`:
 
-The runner accepts JSON via:
+```powershell
+npm.cmd run build:desktop:standalone
+```
+
+Local artifact path (developer machine only):
+
+- `Gui\release\FrowCRRD-...-win-x64.exe`
+
+Important:
+
+- This local path is **not** where end users should download installers.
+- End users should use GitHub Releases page.
+
+## 5. End User Delivery
+
+Release process summary:
+
+1. Build installer locally.
+2. Create GitHub Release.
+3. Upload built `.exe` to release assets.
+4. Users install from Releases page.
+
+## 6. Runtime Contract (GUI -> Runner)
+
+Runner input command:
 
 ```text
---input <path-to-json>
+frowcrrd_runner.exe --input <path>
 ```
 
-Primary fields:
+Runner output:
 
-- `stages[]`
-  - `structuralMass`, `payloadMass`, `diameter`
-  - `tank.dryMass`, `tank.fuelMass`
-  - `engineGroup.engineCount`, `engineGroup.thrust`, `engineGroup.massFlow`, `engineGroup.engineMass`
-  - `engineGroup.instances[].throttlePoints[]` (`t`, `v`)
-  - `separation.mode` (`time`/`altitude`/`fuel`), `separation.value`
-- `fairingMass`, `fairingSeparation.mode/value`
-- `pitchProgramEnabled`, `pitchProgram[]`
-- `parachutes[]`
-  - `mode` (`time`/`altitude`/`speed`)
-  - `isDrogue`
-  - `area`, `start`, `end`
-- `simulation`
-  - `dt`, `tMax`
-  - `dragEnabled` (effectively always true from GUI)
-  - `parachuteEnabled`
-  - `stopOnImpact`, `stopOnFuelDepleted`
+- JSON with `telemetry[]`
+- metadata fields (`points`, `returnedPoints`)
 
-## 4. Runner Behavior
+Key config domains used by runner:
 
-File: `Bridge/runner.cpp`.
+- stage/tank/engine definitions;
+- separation rules;
+- pitch program;
+- parachute setup;
+- simulation settings (`dt`, `tMax`, `stopOnImpact`, etc.).
 
-- Reads JSON with `boost::property_tree`.
-- Builds `Rocket` via helper builders.
-- Runs `Simulation`.
-- Returns JSON with `telemetry[]` and auxiliary `points`/`returnedPoints` fields.
+## 7. Packaging Notes
 
-### 4.1 stopOnImpact
-
-If `simulation.stopOnImpact=true`, runner can rerun with extended horizon until impact is detected (bounded by internal safety cap).
-
-### 4.2 Parachute Mode Constraint
-
-All parachutes in one config must share one mode.
-
-Error text:
-
-```text
-All parachutes must use the same control mode.
-```
-
-## 5. Core Notes
-
-### 5.1 Integrated State
-
-`Simulation` integrates:
-
-- `ALTITUDE`
-- `VERTICAL_VEL`
-- `HORIZONTAL_VEL`
-- `DOWNRANGE_DIST`
-- `MASS`
-
-### 5.2 Integration Method
-
-- `runge_kutta_fehlberg78` (`boost::numeric::odeint`)
-- adaptive integration within each configured `dt`
-
-### 5.3 Mass/Fuel Safety
-
-Current behavior includes safeguards:
-
-- active stage shutdown at effective fuel depletion;
-- per-step fuel consumption capped by available fuel;
-- state mass lower bound to avoid non-physical accelerations and NaN cascades.
-
-## 6. Runner -> GUI Telemetry Contract
-
-Telemetry point fields:
-
-- `t`
-- `altitude`
-- `downrange`
-- `vVert`
-- `vHor`
-- `vTotal`
-- `accel`
-- `mass`
-- `thrust`
-- `mach`
-- `pitch`
-
-GUI may interpolate between neighboring points for smooth playhead rendering.
-
-## 7. Desktop Packaging Notes
-
-`Gui/package.json` includes Electron Builder config with:
+`Gui/package.json` Electron Builder config:
 
 - Windows NSIS target only;
-- `extraResources` for `Configs` and `sim-core` (`frowcrrd_runner.exe` + runtime DLLs);
-- local renderer bundle (no runtime CDN dependencies).
+- bundles `Configs` as resources;
+- bundles `sim-core` (`frowcrrd_runner.exe` + runtime DLLs);
+- uses local icon (`Gui/build/icon.ico`) for installer/app executable.
 
-Main process entrypoint: `Gui/electron/main.cjs`.
+## 8. Common Developer Errors
 
-## 8. Common Failure Cases
+### `runner_not_found`
 
-### 8.1 `runner_not_found`
+Build runner first (`npm run build:sim-core`) or set `FROWCRRD_RUNNER_PATH`.
 
-Build runner (`npm run build:sim-core`) or set `FROWCRRD_RUNNER_PATH`.
+### `Failed to load config: Configs/config.json`
 
-### 8.2 `Failed to load config: Configs/config.json`
+Packaging/runtime `cwd` mismatch. Verify current `electron/main.cjs` runner `cwdCandidates` and packaged resource layout.
 
-Desktop process started with wrong working directory/resources.
-Use standard scripts from `Gui`.
+## 9. Useful Scripts
 
-### 8.3 Invalid Physics Parameters
+- `scripts/build_sim_runner.ps1`
+- `scripts/run_massive_audit.ps1`
+- `scripts/clean_builds.ps1`
 
-Check:
-
-- `thrust`/`massFlow` > 0 for active engines;
-- launch thrust-to-weight viability;
-- parachute consistency;
-- stage ordering and mass values.
-
-## 9. Developer Scripts
-
-- `scripts/build_sim_runner.ps1` - build runner and copy runtime DLL deps
-- `scripts/run_massive_audit.ps1` - multi-profile audit runs
-- `scripts/clean_builds.ps1` - cleanup helper
-
-## 10. Contribution and Legal
+## 10. Legal
 
 - `CONTRIBUTING.md`
 - `LICENSE`

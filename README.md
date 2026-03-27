@@ -1,128 +1,69 @@
 ﻿# FrowCRRd
 
-Desktop rocket simulation suite with a C++20 physics core and an Electron GUI.
+Windows desktop rocket simulation suite with a C++20 physics core and an Electron GUI.
 
-## Distribution Scope
+## Who This Repository Is For
 
-This repository is now configured for **Windows-only distribution**.
+- End users: download ready installer from **GitHub Releases**.
+- Developers: build from source using the instructions below.
 
-- Native runner output: `frowcrrd_runner.exe`
-- Desktop installer target: **NSIS offline installer** (`.exe`)
-- Non-Windows build targets and scripts are intentionally removed
+## End User Installation
 
-## Overview
+Do **not** build from source if you only want to run the app.
 
-FrowCRRd combines:
+1. Open Releases: https://github.com/mf0tmd/FrowCRRd/releases
+2. Download latest Windows installer (`FrowCRRD-...-win-x64.exe`).
+3. Run installer and complete setup.
 
-- Native simulation core in C++20 (`Core`, `Models`, `Configs`)
-- JSON bridge runner (`Bridge/frowcrrd_runner`)
-- Desktop GUI in Electron + React (`Gui`)
+Notes:
 
-Current model scope: 2D point-mass flight simulation (not 6DOF).
+- Internet is needed only to download installer/update files from GitHub.
+- The installed app itself works offline for simulation workflow.
 
-## Requirements (Build From Source)
+## End User Docs
 
-- Git
+- `docs/USER_GUIDE.md` - app usage, workflow, simulation behavior.
+
+## Developer Quick Start (Source Build)
+
+Use this only if you are developing the project.
+
+Requirements:
+
 - Node.js 20+
 - npm
 - CMake 3.20+
 - Ninja
 - MSYS2 UCRT64 toolchain (`C:\msys64\ucrt64`)
 
-## Quick Start (Desktop Dev)
-
-From repository root:
+Run desktop dev flow:
 
 ```powershell
 cd Gui
-npm install
-npm run dev:desktop:core
-```
-
-If PowerShell blocks npm scripts:
-
-```powershell
 npm.cmd install
 npm.cmd run dev:desktop:core
 ```
 
-## Build Native Runner
-
-From repository root:
+Build standalone installer locally:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_sim_runner.ps1 -BuildDir build\gui-release -BuildType Release
+cd Gui
+npm.cmd run build:desktop:standalone
 ```
 
-Expected output:
+Local build artifacts (developer machine):
 
-```text
-build\gui-release\bin\frowcrrd_runner.exe
-```
+- `Gui/release/`
 
-The build helper also copies required MSYS2 runtime DLLs next to the runner executable for portable packaging.
+## Developer Docs
 
-## Build Standalone Installer (.exe)
+- `docs/DEVELOPER_GUIDE.md` - architecture, runner contract, packaging pipeline.
 
-From `Gui/`:
+## Project Scope
 
-```powershell
-npm install
-npm run build:desktop:standalone
-```
-
-Installer artifacts are generated in:
-
-```text
-Gui\release\
-```
-
-## Offline Runtime Guarantee
-
-Packaged desktop builds do not require internet access for normal operation:
-
-- renderer dependencies are bundled locally via Vite;
-- no CDN/import-map runtime modules are used;
-- no runtime web API calls are performed by GUI/core;
-- native runner + required runtime DLLs are bundled into installer resources.
-
-## How GUI Talks to Core
-
-- Renderer sends config JSON via IPC `simulation:run`
-- Electron main process runs `frowcrrd_runner.exe --input <temp-json>`
-- Runner returns telemetry JSON
-- GUI normalizes telemetry and renders charts, playback and event markers
-
-Implementation entrypoint: `Gui/electron/main.cjs`.
-
-## Frequent Problems
-
-### `runner_not_found`
-
-Build native runner first:
-
-```powershell
-npm run build:sim-core
-```
-
-### `Failed to load config: Configs/config.json`
-
-Run desktop flow from `Gui` (`npm run dev:desktop:core`) so working directory resolution is correct.
-
-### `npm.ps1 cannot be loaded` (Execution Policy)
-
-Use `npm.cmd ...` commands in PowerShell.
-
-## Repository Layout
-
-- `Bridge/` - native JSON bridge runner
-- `Configs/` - simulation config + CSV files
-- `Core/` - integrator and simulation loop
-- `Models/` - atmosphere, drag, engine, stage, rocket, parachute models
-- `Gui/` - Electron + React frontend
-- `docs/` - user and developer guides
-- `scripts/` - helper scripts
-- `Tests/` - test targets
+- Windows-only distribution branch.
+- Desktop app + native runner (`frowcrrd_runner.exe`).
+- Current physics scope: 2D point-mass model (not 6DOF).
 
 ## License
 
