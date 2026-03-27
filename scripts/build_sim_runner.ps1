@@ -86,6 +86,33 @@ function Copy-RunnerRuntimeDependencies {
         return
     }
 
+    function Get-BinaryDependencies {
+        param(
+            [Parameter(Mandatory = $true)][string]$BinaryPath
+        )
+
+        if (-not (Test-Path $BinaryPath)) {
+            return @()
+        }
+
+        $output = & $objdumpExe -p $BinaryPath 2>$null
+        if ($LASTEXITCODE -ne 0 -or -not $output) {
+            return @()
+        }
+
+        $dependencies = @()
+        foreach ($line in $output) {
+            if ($line -match 'DLL Name:\s+(.+)$') {
+                $dllName = $Matches[1].Trim()
+                if ($dllName) {
+                    $dependencies += $dllName
+                }
+            }
+        }
+
+        return $dependencies | Sort-Object -Unique
+    }
+
     $systemDlls = @{
         "ADVAPI32.DLL" = $true
         "COMCTL32.DLL" = $true
@@ -106,47 +133,50 @@ function Copy-RunnerRuntimeDependencies {
         "WS2_32.DLL" = $true
     }
 
-    $dllNames = @()
-    foreach ($line in $objdumpOutput) {
-        if ($line -match 'DLL Name:\s+(.+)$') {
-            $dllName = $Matches[1].Trim()
-            if ($dllName) {
-                $dllNames += $dllName
+    $runnerDir = Split-Path -Parent $RunnerExePath
+    $queue = [System.Collections.Generic.Queue[string]]::new()
+    $queue.Enqueue($RunnerExePath)
+    $processed = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    $copied = @()
+
+    while ($queue.Count -gt 0) {
+        $currentBinary = $queue.Dequeue()
+        if (-not $processed.Add($currentBinary)) {
+            continue
+        }
+
+        $dllNames = Get-BinaryDependencies -BinaryPath $currentBinary
+        foreach ($dllName in $dllNames) {
+            $dllUpper = $dllName.ToUpperInvariant()
+
+            if ($dllUpper.StartsWith("API-MS-WIN-") -or $dllUpper.StartsWith("EXT-MS-WIN-")) {
+                continue
+            }
+
+            if ($systemDlls.ContainsKey($dllUpper)) {
+                continue
+            }
+
+            $sourcePath = Join-Path $msysBin $dllName
+            $destinationPath = Join-Path $runnerDir $dllName
+
+            if (Test-Path $sourcePath) {
+                if (-not (Test-Path $destinationPath)) {
+                    Copy-Item -LiteralPath $sourcePath -Destination $destinationPath -Force
+                    $copied += $dllName
+                }
+                $queue.Enqueue($destinationPath)
+                continue
+            }
+
+            if (Test-Path $destinationPath) {
+                $queue.Enqueue($destinationPath)
             }
         }
     }
-    $dllNames = $dllNames | Sort-Object -Unique
-
-    if ($dllNames.Count -eq 0) {
-        Write-Host "No additional runtime DLL dependencies detected." -ForegroundColor Cyan
-        return
-    }
-
-    $runnerDir = Split-Path -Parent $RunnerExePath
-    $copied = @()
-
-    foreach ($dllName in $dllNames) {
-        $dllUpper = $dllName.ToUpperInvariant()
-
-        if ($dllUpper.StartsWith("API-MS-WIN-") -or $dllUpper.StartsWith("EXT-MS-WIN-")) {
-            continue
-        }
-
-        if ($systemDlls.ContainsKey($dllUpper)) {
-            continue
-        }
-
-        $sourcePath = Join-Path $msysBin $dllName
-        if (-not (Test-Path $sourcePath)) {
-            continue
-        }
-
-        $destinationPath = Join-Path $runnerDir $dllName
-        Copy-Item -LiteralPath $sourcePath -Destination $destinationPath -Force
-        $copied += $dllName
-    }
 
     if ($copied.Count -gt 0) {
+        $copied = $copied | Sort-Object -Unique
         Write-Host ("Copied runtime DLLs: " + ($copied -join ", ")) -ForegroundColor Green
     } else {
         Write-Host "No MSYS2 runtime DLLs needed to be copied." -ForegroundColor Cyan
